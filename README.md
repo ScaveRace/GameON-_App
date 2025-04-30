@@ -1,181 +1,136 @@
 # GameON-_App
-## Architecture Overview
+## Features
 
-The app is built using SwiftUI and follows the MVVM (Model-View-ViewModel) architecture pattern. It uses Apple's MultipeerConnectivity framework for peer-to-peer communication.
+### Multiplayer Gameplay
+- Real-time peer-to-peer connectivity
+- Automatic player discovery
+- Lobby system for game creation and joining
+- Leader/Member roles for game management
+- Real-time game state synchronization
+- Score tracking and updates
 
-## Core Components
+### User Interface
+- Modern dark mode design
+- Intuitive navigation system
+- Player list with role indicators
+- Real-time connection status
+- Game board with visual feedback
+- Score display
 
-### Multipeer Connectivity Implementation
+### Game Management
+- Create and join game lobbies
+- Automatic role assignment (Leader/Member)
+- Game state management
+- Turn-based gameplay
+- Winner detection and score updates
+- Game reset functionality
 
-#### MPConnectionManager
-The `MPConnectionManager` class handles all peer-to-peer communication using the following components:
+## Technical Implementation
 
-- **MCSession**: Manages the connection between peers
-  - Handles data transfer between connected devices
-  - Manages connection state
-  - Provides delegate methods for connection events
+### Multipeer Connectivity
+The app uses Apple's MultipeerConnectivity framework for peer-to-peer communication, which includes:
+- `MCSession`: Manages the connection between peers and handles data transfer
+- `MCNearbyServiceAdvertiser`: Advertises the device's availability for connections
+- `MCNearbyServiceBrowser`: Discovers nearby devices advertising the service
+- `MCPeerID`: Represents a peer in the session with a unique display name
 
-- **MCNearbyServiceAdvertiser**: Handles device advertising
-  - Broadcasts device availability
-  - Manages service discovery
-  - Handles invitation requests
-
-- **MCNearbyServiceBrowser**: Handles peer discovery
-  - Searches for nearby devices
-  - Maintains list of available peers
-  - Initiates connection requests
-
-- **MCPeerID**: Represents peer identity
-  - Stores unique display name
-  - Manages peer identification
-  - Handles peer state changes
-
-### Game Logic Implementation
-
-#### GameService
-The `GameService` class manages all game-related logic:
-
-- **Game State Management**
-  - Tracks player turns
+### Game State Management
+- `GameService`: Core game logic and state management
+  - Handles player turns and moves
   - Manages game board state
-  - Handles move validation
-  - Implements win detection
+  - Tracks scores and game progress
+  - Implements winner detection logic
+  - Synchronizes game state between peers
 
-- **Score Management**
-  - Tracks player scores
-  - Updates score display
-  - Handles score synchronization
-
-- **Player Management**
-  - Manages player roles (Leader/Member)
-  - Handles player turns
-  - Tracks player moves
+### Connection Management
+- `MPConnectionManager`: Handles all peer-to-peer communication
+  - Manages session establishment and teardown
+  - Handles invitation acceptance/rejection
+  - Synchronizes game moves between players
+  - Maintains connection state and peer list
+  - Implements reliable data transfer for game moves
 
 ### Data Synchronization
+- Custom `MPGameMove` protocol for game state updates
+- JSON encoding/decoding for move transmission
+- Reliable message delivery for critical game events
+- Automatic reconnection handling
+- State recovery mechanisms for dropped connections
 
-#### MPGameMove Protocol
-Custom protocol for game state synchronization:
+### UI Architecture
+- SwiftUI-based modern interface
+- Dark mode support with custom color scheme
+- Reactive UI updates based on game state
+- Navigation stack for view management
+### Prerequisites
+- iOS device running iOS 15.0 or later
+- Xcode 13.0 or later (for development)
+- Swift 5.5 or later
 
-- **Move Structure**
-  ```swift
-  struct MPGameMove {
-      let action: GameAction
-      let playrName: String
-      let index: Int?
-      let player1Score: Int?
-      let player2Score: Int?
-  }
-  ```
+### Installation Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/GameON-_App.git
+   ```
 
-- **Synchronization Process**
-  1. Move encoding to JSON
-  2. Reliable data transfer
-  3. Move decoding and validation
-  4. State update and UI refresh
+2. Open the project in Xcode:
+   - Navigate to the project directory
+   - Double-click on the `.xcodeproj` file
 
-### UI Implementation
+3. Build and run the project:
+   - Select your target device
+   - Click the "Run" button or press Cmd+R
 
-#### SwiftUI Architecture
-The app uses SwiftUI for its modern UI implementation:
+## User Guide
 
-- **View Hierarchy**
-  - Main navigation stack
-  - Game board view
-  - Lobby view
-  - Settings view
+### Setting Up Your Profile
+1. Launch the GameON! app
+2. Your default name is set to "Fynn"
+3. You can change your name in the app settings
 
-- **State Management**
-  - @State for local view state
-  - @Published for observable objects
-  - @EnvironmentObject for shared state
+### Creating a Game Lobby
+1. Open the app and tap "Create Game"
+2. Your device will start advertising for nearby players
+3. Wait for other players to join your lobby
+4. As the leader, you'll see your name at the top of the player list
+5. Once players have joined, tap "Start Game" to begin
 
-- **Custom Components**
-  - Game board grid
-  - Player list
-  - Score display
-  - Connection status indicators
+### Joining a Game
+1. Open the app and tap "Join Game"
+2. The app will search for available games nearby
+3. Select a game from the list of available players
+4. Wait for the leader to accept your join request
+5. Once accepted, you'll be taken to the game lobby
+6. Wait for the leader to start the game
 
-## Technical Details
+### Playing the Game
+1. The leader (Player 1) always goes first
+2. Take turns placing your marks on the game board
+3. The game automatically tracks scores and detects winners
+4. After a game ends, scores are updated and the game can be reset
 
-### Connection Flow
-1. Device advertising starts
-2. Peer discovery begins
-3. Connection request sent
-4. Invitation accepted/rejected
-5. Session established
-6. Game state synchronized
+### Changing Your Name
+1. Go to the app settings
+2. Find the "Your Name" field
+3. Enter your desired name
+4. The change will be applied immediately
 
-### Data Transfer Protocol
-- JSON encoding for moves
-- Reliable message delivery
-- Automatic reconnection
-- State recovery mechanisms
+## Troubleshooting
 
-### Error Handling
-- Connection timeouts
-- Data transfer failures
-- State synchronization errors
-- UI update failures
+### Connection Issues
+- Ensure Bluetooth and WiFi are enabled
+- Make sure devices are within close proximity
+- Restart the app if connection problems persist
 
-## Performance Considerations
+### Game Issues
+- If the game freezes, try resetting the app
+- Ensure all players have the latest version of the app
+- Check that all devices are connected to the same network
 
-### Memory Management
-- Automatic reference counting
-- Weak references for delegates
-- Proper cleanup on disconnection
+## Support
 
-### Network Optimization
-- Minimal data transfer
-- Efficient state updates
-- Connection pooling
-- Background operation handling
+For any issues or questions, please contact the development team through the GitHub repository issues section.
 
-## Security Implementation
+## License
 
-### Data Protection
-- Encrypted connections
-- Secure peer authentication
-- Data validation
-- Input sanitization
-
-## Testing
-
-### Unit Tests
-- Game logic tests
-- Connection tests
-- State management tests
-- UI component tests
-
-### Integration Tests
-- Multi-device scenarios
-- Connection scenarios
-- Game flow tests
-- Error handling tests
-
-## Debugging
-
-### Logging System
-- Connection events
-- Game state changes
-- Error tracking
-- Performance metrics
-
-### Debug Tools
-- Connection status display
-- Game state inspection
-- Network traffic monitoring
-- Performance profiling
-
-## Future Improvements
-
-### Planned Features
-- Enhanced error recovery
-- Improved state synchronization
-- Additional game modes
-- Performance optimizations
-
-### Technical Debt
-- Code refactoring
-- Documentation updates
-- Test coverage improvements
-- Performance enhancements 
+This project is licensed under the MIT License - see the LICENSE file for details.
